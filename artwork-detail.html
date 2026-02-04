@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereal Moments - Artwork Exploration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 3rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
+        }
+
+        .back-button {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s;
+        }
+
+        .back-button:hover {
+            opacity: 0.7;
+        }
+
+        .artwork-title-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .artwork-title-nav.visible {
+            opacity: 1;
+        }
+
+        /* Scroll Sections */
+        .scroll-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-section h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: #aaa;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.3s forwards;
+        }
+
+        .hero-section .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: #666;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.6s forwards, bounce 2s ease 2s infinite;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Image Container */
+        .image-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .artwork-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease-out, filter 0.3s ease-out;
+            transform-origin: center center;
+        }
+
+        /* Text Overlay */
+        .text-overlay {
+            position: absolute;
+            max-width: 500px;
+            padding: 2.5rem;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .text-overlay.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-overlay h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .text-overlay p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #ccc;
+        }
+
+        .text-overlay.left {
+            left: 8%;
+            top: 50%;
+            transform: translate(0, -50%) translateY(30px);
+        }
+
+        .text-overlay.left.visible {
+            transform: translate(0, -50%) translateY(0);
+        }
+
+        .text-overlay.right {
+            right: 8%;
+            top: 50%;
+            transform: translate(0, -50%) translateY(30px);
+        }
+
+        .text-overlay.right.visible {
+            transform: translate(0, -50%) translateY(0);
+        }
+
+        .text-overlay.center {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(30px);
+            text-align: center;
+        }
+
+        .text-overlay.center.visible {
+            transform: translate(-50%, -50%) translateY(0);
+        }
+
+        .text-overlay.bottom {
+            bottom: 10%;
+            left: 50%;
+            transform: translate(-50%, 0) translateY(30px);
+            text-align: center;
+        }
+
+        .text-overlay.bottom.visible {
+            transform: translate(-50%, 0) translateY(0);
+        }
+
+        /* Detail Sections */
+        .detail-section {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Spacer for scroll */
+        .spacer {
+            height: 100vh;
+        }
+
+        /* Final Section */
+        .final-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #0a0a0a;
+            position: relative;
+            z-index: 100;
+        }
+
+        .final-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .final-section .artwork-info {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .cta-button {
+            padding: 1rem 3rem;
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #fff;
+            color: #0a0a0a;
+        }
+
+        .cta-button.primary {
+            background: #fff;
+            color: #0a0a0a;
+        }
+
+        .cta-button.primary:hover {
+            background: transparent;
+            color: #fff;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background: #fff;
+            transform: scale(1.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 3rem;
+            }
+
+            .text-overlay {
+                max-width: 85%;
+                padding: 1.5rem;
+            }
+
+            .text-overlay h2 {
+                font-size: 1.5rem;
+            }
+
+            .text-overlay.left,
+            .text-overlay.right {
+                left: 7.5%;
+                right: auto;
+            }
+
+            .final-section h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .progress-indicator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav">
+        <a href="#" class="back-button">← BACK TO GALLERY</a>
+        <div class="artwork-title-nav">Ethereal Moments</div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+        <div class="progress-dot active" data-section="0"></div>
+        <div class="progress-dot" data-section="1"></div>
+        <div class="progress-dot" data-section="2"></div>
+        <div class="progress-dot" data-section="3"></div>
+        <div class="progress-dot" data-section="4"></div>
+        <div class="progress-dot" data-section="5"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1>Ethereal Moments</h1>
+        <p class="subtitle">MIXED MEDIA ON CANVAS, 2024</p>
+        <p class="scroll-hint">SCROLL TO EXPLORE ↓</p>
+    </section>
+
+    <!-- Fixed Image Container -->
+    <div class="image-container">
+        <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=2000&h=2000&fit=crop" 
+             alt="Ethereal Moments Artwork" 
+             class="artwork-image"
+             id="artworkImage">
+    </div>
+
+    <!-- Detail Section 1: Introduction -->
+    <div class="spacer"></div>
+    <section class="scroll-section detail-section" data-zoom="1" data-x="50" data-y="50">
+        <div class="text-overlay left">
+            <h2>A Journey Through Light</h2>
+            <p>This piece explores the interplay between light and shadow, capturing fleeting moments of beauty that exist in the space between clarity and ambiguity.</p>
+        </div>
+    </section>
+
+    <!-- Detail Section 2: Upper Detail -->
+    <section class="scroll-section detail-section" data-zoom="1.8" data-x="50" data-y="25">
+        <div class="text-overlay right">
+            <h2>Textural Complexity</h2>
+            <p>Notice the layered brushwork in the upper portion—each stroke was applied with intention, building depth through translucent glazes and bold impasto techniques.</p>
+        </div>
+    </section>
+
+    <!-- Detail Section 3: Center Detail -->
+    <section class="scroll-section detail-section" data-zoom="2.2" data-x="60" data-y="50">
+        <div class="text-overlay left">
+            <h2>The Heart of the Composition</h2>
+            <p>At the center, warm amber tones emerge from cooler surroundings. This contrast represents the tension between chaos and calm, a central theme throughout the work.</p>
+        </div>
+    </section>
+
+    <!-- Detail Section 4: Lower Detail -->
+    <section class="scroll-section detail-section" data-zoom="1.9" data-x="40" data-y="70">
+        <div class="text-overlay right">
+            <h2>Gestural Energy</h2>
+            <p>The lower section reveals dynamic, gestural marks that suggest movement and spontaneity—a counterpoint to the more controlled areas above.</p>
+        </div>
+    </section>
+
+    <!-- Detail Section 5: Overall View -->
+    <section class="scroll-section detail-section" data-zoom="1.2" data-x="50" data-y="50">
+        <div class="text-overlay center">
+            <h2>The Complete Vision</h2>
+            <p>Stepping back, the composition reveals its full narrative—a meditation on memory, emotion, and the ephemeral nature of human experience.</p>
+        </div>
+    </section>
+
+    <!-- Final Section -->
+    <section class="final-section">
+        <h2>Ethereal Moments</h2>
+        <div class="artwork-info">
+            Mixed Media on Canvas<br>
+            48" × 36" (122cm × 91cm)<br>
+            Created 2024
+        </div>
+        <div class="cta-buttons">
+            <a href="#" class="cta-button primary">INQUIRE ABOUT THIS WORK</a>
+            <a href="#" class="cta-button">BACK TO GALLERY</a>
+        </div>
+    </section>
+
+    <script>
+        // Parallax and zoom effect on scroll
+        const imageContainer = document.querySelector('.image-container');
+        const artworkImage = document.getElementById('artworkImage');
+        const detailSections = document.querySelectorAll('.detail-section');
+        const textOverlays = document.querySelectorAll('.text-overlay');
+        const titleNav = document.querySelector('.artwork-title-nav');
+        const progressDots = document.querySelectorAll('.progress-dot');
+        
+        let currentSection = 0;
+        let isScrolling = false;
+
+        function updateImageTransform() {
+            const scrollProgress = window.scrollY;
+            const windowHeight = window.innerHeight;
+            
+            // Find which section we're in
+            detailSections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                const sectionTop = rect.top;
+                const sectionBottom = rect.bottom;
+                
+                // Check if section is in view
+                if (sectionTop <= windowHeight / 2 && sectionBottom >= windowHeight / 2) {
+                    const zoom = parseFloat(section.dataset.zoom) || 1;
+                    const xPos = parseFloat(section.dataset.x) || 50;
+                    const yPos = parseFloat(section.dataset.y) || 50;
+                    
+                    // Smooth transition
+                    const progress = (windowHeight / 2 - sectionTop) / (sectionBottom - sectionTop);
+                    const smoothProgress = Math.min(Math.max(progress, 0), 1);
+                    
+                    artworkImage.style.transform = `scale(${zoom}) translate(${(50 - xPos) * (zoom - 1) * 0.5}%, ${(50 - yPos) * (zoom - 1) * 0.5}%)`;
+                    artworkImage.style.transformOrigin = `${xPos}% ${yPos}%`;
+                    
+                    // Update current section
+                    if (currentSection !== index + 1) {
+                        currentSection = index + 1;
+                        updateProgress();
+                    }
+                }
+            });
+
+            // Show/hide text overlays based on scroll position
+            textOverlays.forEach(overlay => {
+                const rect = overlay.getBoundingClientRect();
+                const isVisible = rect.top < windowHeight * 0.75 && rect.bottom > windowHeight * 0.25;
+                
+                if (isVisible) {
+                    overlay.classList.add('visible');
+                } else {
+                    overlay.classList.remove('visible');
+                }
+            });
+
+            // Show title in nav after scrolling past hero
+            if (scrollProgress > windowHeight * 0.5) {
+                titleNav.classList.add('visible');
+            } else {
+                titleNav.classList.remove('visible');
+            }
+
+            // Update progress for hero section
+            if (scrollProgress < windowHeight) {
+                currentSection = 0;
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            progressDots.forEach((dot, index) => {
+                if (index === currentSection) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // Smooth scroll on progress dot click
+        progressDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                const targetY = index === 0 ? 0 : window.innerHeight * (index + 0.5);
+                window.scrollTo({
+                    top: targetY,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Throttle scroll events for performance
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateImageTransform();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Initial update
+        updateImageTransform();
+
+        // Handle resize
+        window.addEventListener('resize', updateImageTransform);
+
+        // Prevent image dragging
+        artworkImage.addEventListener('dragstart', (e) => e.preventDefault());
+    </script>
+</body>
+</html>
