@@ -1,0 +1,284 @@
+# COMPLETE CUSTOMIZATION GUIDE
+
+## 🎯 How to Control Zoom & Focus Points
+
+In each `<section>` tag, you control zoom with three attributes:
+
+```html
+<section class="scroll-section detail-section" data-zoom="2.0" data-x="30" data-y="20">
+```
+
+### `data-zoom` - How Much to Zoom
+- `1` = No zoom (full artwork visible)
+- `1.5` = Zoom in 1.5x
+- `2.0` = Zoom in 2x  
+- `2.5` = Zoom in 2.5x (very close)
+- Higher numbers = closer zoom
+
+### `data-x` - Horizontal Focus (Left to Right)
+- `0` = Far left edge
+- `25` = Left quarter
+- `50` = Center
+- `75` = Right quarter
+- `100` = Far right edge
+
+### `data-y` - Vertical Focus (Top to Bottom)
+- `0` = Top edge
+- `25` = Upper quarter
+- `50` = Center (middle)
+- `75` = Lower quarter  
+- `100` = Bottom edge
+
+### Example Focus Points:
+```html
+<!-- Zoom to top-left corner -->
+<section data-zoom="2.0" data-x="25" data-y="25">
+
+<!-- Zoom to center -->
+<section data-zoom="1.8" data-x="50" data-y="50">
+
+<!-- Zoom to bottom-right detail -->
+<section data-zoom="2.2" data-x="75" data-y="80">
+```
+
+---
+
+## 🖼️ How to Change Images
+
+### 1. Main Artwork Image (Background)
+Find this line:
+```html
+<img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=2000&h=2000&fit=crop" 
+     alt="Main Artwork" 
+     class="artwork-image"
+     id="artworkImage">
+```
+
+Replace the `src="..."` with:
+- Your image URL (if hosted online)
+- Or a local path: `src="images/my-artwork.jpg"`
+
+### 2. Pop-up Images (Portraits, References, Details)
+Find sections with pop-up images:
+```html
+<div class="popup-image from-left portrait">
+    <img src="YOUR_IMAGE_URL_HERE" alt="Description">
+    <div class="caption-bubble top-left">
+        Your caption text here!
+    </div>
+</div>
+```
+
+Replace `YOUR_IMAGE_URL_HERE` with your image.
+
+---
+
+## 💬 How to Add Pop-Up Images (Comic Style)
+
+### Basic Structure:
+```html
+<div class="popup-image from-left medium">
+    <img src="path/to/image.jpg" alt="Description">
+    <div class="caption-bubble top-left">
+        Your text here!
+    </div>
+</div>
+```
+
+### Direction Options (where it comes from):
+- `from-left` - Slides in from left side
+- `from-right` - Slides in from right side
+- `from-top` - Drops down from top
+- `from-bottom` - Pops up from bottom
+
+### Size Options:
+- `small` - 200x200px
+- `medium` - 300x300px  
+- `large` - 400x400px
+- `portrait` - 250x350px (tall)
+- `landscape` - 400x250px (wide)
+
+### Caption Bubble Position:
+- `top-left` - Speech bubble points to top-left
+- `bottom-right` - Speech bubble points to bottom-right
+
+### Full Example - Multiple Pop-ups in One Section:
+```html
+<section class="scroll-section detail-section" data-zoom="2.0" data-x="60" data-y="40">
+    <!-- Your text description -->
+    <div class="text-overlay left">
+        <h2>Influences</h2>
+        <p>This section was influenced by Picasso and Matisse.</p>
+    </div>
+    
+    <!-- Pop-up 1: Picasso portrait from left -->
+    <div class="popup-image from-left portrait" style="top: 15%;">
+        <img src="images/picasso-portrait.jpg" alt="Picasso">
+        <div class="caption-bubble top-left" style="top: -60px; left: 10px;">
+            Picasso's cubism!
+        </div>
+    </div>
+    
+    <!-- Pop-up 2: Matisse work from right -->
+    <div class="popup-image from-right medium" style="top: 50%;">
+        <img src="images/matisse-cutout.jpg" alt="Matisse">
+        <div class="caption-bubble bottom-right" style="bottom: -60px; right: 10px;">
+            Matisse's color
+        </div>
+    </div>
+    
+    <!-- Pop-up 3: Detail shot from bottom -->
+    <div class="popup-image from-bottom small">
+        <img src="images/detail-closeup.jpg" alt="Detail">
+    </div>
+</section>
+```
+
+---
+
+## ✍️ How to Change Text Content
+
+### Section Title and Description:
+```html
+<div class="text-overlay left">
+    <h2>Your Title Here</h2>
+    <p>Your description text here. You can write multiple sentences explaining this part of the artwork.</p>
+</div>
+```
+
+### Text Position Options:
+- `text-overlay left` - Text box on left side
+- `text-overlay right` - Text box on right side  
+- `text-overlay center` - Text box in center
+
+---
+
+## 📍 Advanced Positioning
+
+### Fine-tune Pop-up Position:
+Add inline styles to adjust exactly where pop-ups appear:
+
+```html
+<!-- Control vertical position -->
+<div class="popup-image from-left medium" style="top: 20%;">
+
+<!-- Or use bottom positioning -->
+<div class="popup-image from-right small" style="bottom: 15%; right: 8%;">
+```
+
+Percentages:
+- `top: 10%` = Near top of screen
+- `top: 50%` = Middle of screen
+- `bottom: 20%` = Near bottom
+- `left: 5%` / `right: 5%` = Horizontal position
+
+---
+
+## 🎨 Complete Section Template
+
+Copy this template for each new section:
+
+```html
+<!-- SECTION: Your Section Name -->
+<section class="scroll-section detail-section" 
+         data-zoom="1.8" 
+         data-x="50" 
+         data-y="60">
+    
+    <!-- Text description -->
+    <div class="text-overlay right">
+        <h2>Section Title</h2>
+        <p>Explain what viewers should notice in this zoom level and area.</p>
+    </div>
+    
+    <!-- Optional: Add pop-up images -->
+    <div class="popup-image from-left portrait" style="top: 20%;">
+        <img src="images/reference-1.jpg" alt="Reference">
+        <div class="caption-bubble top-left" style="top: -60px; left: 10px;">
+            Caption text!
+        </div>
+    </div>
+    
+    <!-- Optional: Add more pop-ups as needed -->
+</section>
+```
+
+---
+
+## 🔧 Quick Customization Checklist
+
+For each artwork presentation:
+
+1. ✅ Replace main artwork image URL
+2. ✅ Update title in `<h1>` tag
+3. ✅ Update subtitle (medium, year)
+4. ✅ For each section:
+   - Set zoom level (`data-zoom`)
+   - Set focus point (`data-x`, `data-y`)
+   - Write descriptive text
+   - Add pop-up images (optional)
+   - Add captions to pop-ups
+5. ✅ Update final section with artwork details
+6. ✅ Test by scrolling through
+
+---
+
+## 💡 Tips for Best Results
+
+1. **Start with zoom=1** (full view) then gradually zoom in
+2. **Use odd numbers of pop-ups** (1, 3, 5) - looks better
+3. **Mix sizes** - combine small, medium, large for variety
+4. **Don't overcrowd** - 1-3 pop-ups per section is ideal
+5. **Test on mobile** - pop-ups auto-resize but check positioning
+6. **Vary directions** - alternate from-left, from-right, etc.
+
+---
+
+## 🎬 Example Workflow
+
+"I want to show how Van Gogh influenced my brushwork in the upper-right corner"
+
+```html
+<section data-zoom="2.1" data-x="70" data-y="25">
+    <div class="text-overlay left">
+        <h2>Van Gogh's Influence</h2>
+        <p>Notice the swirling, energetic brushstrokes—directly inspired by Van Gogh's technique in Starry Night.</p>
+    </div>
+    
+    <div class="popup-image from-right portrait" style="top: 15%;">
+        <img src="images/van-gogh-portrait.jpg" alt="Van Gogh">
+        <div class="caption-bubble bottom-right" style="bottom: -55px; right: 15px;">
+            Van Gogh, my hero!
+        </div>
+    </div>
+    
+    <div class="popup-image from-top small" style="left: 30%;">
+        <img src="images/starry-night-detail.jpg" alt="Starry Night detail">
+    </div>
+</section>
+```
+
+---
+
+## 📁 Where to Put Your Images
+
+Create a folder structure:
+```
+artist-website/
+├── index.html
+├── artwork-detail.html
+├── images/
+│   ├── my-artwork-main.jpg
+│   ├── van-gogh-portrait.jpg
+│   ├── picasso-reference.jpg
+│   └── detail-closeup.jpg
+```
+
+Then reference them:
+```html
+<img src="images/van-gogh-portrait.jpg" alt="Van Gogh">
+```
+
+---
+
+Need help with a specific customization? Just ask!

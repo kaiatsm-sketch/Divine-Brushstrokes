@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Artwork Presentation - Example</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 3rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
+        }
+
+        .back-button {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s;
+        }
+
+        .back-button:hover {
+            opacity: 0.7;
+        }
+
+        .artwork-title-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .artwork-title-nav.visible {
+            opacity: 1;
+        }
+
+        .scroll-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-section h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: #aaa;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.3s forwards;
+        }
+
+        .hero-section .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: #666;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.6s forwards, bounce 2s ease 2s infinite;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Main Artwork Image */
+        .image-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .artwork-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease-out, filter 0.3s ease-out;
+            transform-origin: center center;
+        }
+
+        /* Text Overlay */
+        .text-overlay {
+            position: absolute;
+            max-width: 500px;
+            padding: 2.5rem;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .text-overlay.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-overlay h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .text-overlay p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #ccc;
+        }
+
+        .text-overlay.left {
+            left: 8%;
+            top: 50%;
+            transform: translate(0, -50%) translateY(30px);
+        }
+
+        .text-overlay.left.visible {
+            transform: translate(0, -50%) translateY(0);
+        }
+
+        .text-overlay.right {
+            right: 8%;
+            top: 50%;
+            transform: translate(0, -50%) translateY(30px);
+        }
+
+        .text-overlay.right.visible {
+            transform: translate(0, -50%) translateY(0);
+        }
+
+        .text-overlay.center {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translateY(30px);
+            text-align: center;
+        }
+
+        .text-overlay.center.visible {
+            transform: translate(-50%, -50%) translateY(0);
+        }
+
+        /* POP-UP IMAGES - Comic Style */
+        .popup-image {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.5) rotate(-5deg);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 5px solid #fff;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            z-index: 50;
+        }
+
+        .popup-image.visible {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* Pop from left */
+        .popup-image.from-left {
+            left: -300px;
+            transform: scale(0.5) rotate(-15deg);
+        }
+
+        .popup-image.from-left.visible {
+            left: 5%;
+            transform: scale(1) rotate(-5deg);
+        }
+
+        /* Pop from right */
+        .popup-image.from-right {
+            right: -300px;
+            transform: scale(0.5) rotate(15deg);
+        }
+
+        .popup-image.from-right.visible {
+            right: 5%;
+            transform: scale(1) rotate(5deg);
+        }
+
+        /* Pop from top */
+        .popup-image.from-top {
+            top: -300px;
+            left: 50%;
+            transform: translate(-50%, 0) scale(0.5);
+        }
+
+        .popup-image.from-top.visible {
+            top: 10%;
+            transform: translate(-50%, 0) scale(1);
+        }
+
+        /* Pop from bottom */
+        .popup-image.from-bottom {
+            bottom: -300px;
+            right: 10%;
+            transform: scale(0.5) rotate(10deg);
+        }
+
+        .popup-image.from-bottom.visible {
+            bottom: 10%;
+            transform: scale(1) rotate(3deg);
+        }
+
+        .popup-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Different sizes for popup images */
+        .popup-image.small {
+            width: 200px;
+            height: 200px;
+        }
+
+        .popup-image.medium {
+            width: 300px;
+            height: 300px;
+        }
+
+        .popup-image.large {
+            width: 400px;
+            height: 400px;
+        }
+
+        .popup-image.portrait {
+            width: 250px;
+            height: 350px;
+        }
+
+        .popup-image.landscape {
+            width: 400px;
+            height: 250px;
+        }
+
+        /* Comic-style caption bubble */
+        .caption-bubble {
+            position: absolute;
+            background: #fff;
+            color: #000;
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 0.9rem;
+            font-weight: bold;
+            max-width: 200px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.5s ease 0.4s;
+        }
+
+        .popup-image.visible .caption-bubble {
+            opacity: 1;
+        }
+
+        /* Speech bubble pointer */
+        .caption-bubble::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+
+        .caption-bubble.top-left::after {
+            border-bottom-color: #fff;
+            top: -20px;
+            left: 20px;
+        }
+
+        .caption-bubble.bottom-right::after {
+            border-top-color: #fff;
+            bottom: -20px;
+            right: 20px;
+        }
+
+        .detail-section {
+            position: relative;
+            z-index: 10;
+        }
+
+        .spacer {
+            height: 100vh;
+        }
+
+        .final-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #0a0a0a;
+            position: relative;
+            z-index: 100;
+        }
+
+        .final-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .final-section .artwork-info {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .cta-button {
+            padding: 1rem 3rem;
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #fff;
+            color: #0a0a0a;
+        }
+
+        .cta-button.primary {
+            background: #fff;
+            color: #0a0a0a;
+        }
+
+        .cta-button.primary:hover {
+            background: transparent;
+            color: #fff;
+        }
+
+        .progress-indicator {
+            position: fixed;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .progress-dot.active {
+            background: #fff;
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 3rem;
+            }
+
+            .text-overlay {
+                max-width: 85%;
+                padding: 1.5rem;
+            }
+
+            .text-overlay h2 {
+                font-size: 1.5rem;
+            }
+
+            .text-overlay.left,
+            .text-overlay.right {
+                left: 7.5%;
+                right: auto;
+            }
+
+            .popup-image.medium,
+            .popup-image.large {
+                width: 200px;
+                height: 200px;
+            }
+
+            .popup-image.portrait {
+                width: 180px;
+                height: 250px;
+            }
+
+            .final-section h2 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .progress-indicator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="full-gallery.html" class="back-button">← BACK TO GALLERY</a>
+        <div class="artwork-title-nav">Example Presentation</div>
+    </div>
+
+    <div class="progress-indicator">
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+    </div>
+
+    <section class="hero-section">
+        <h1>Advanced Presentation</h1>
+        <p class="subtitle">WITH POP-UP IMAGES & CUSTOM FOCUS</p>
+        <p class="scroll-hint">SCROLL TO EXPLORE ↓</p>
+    </section>
+
+    <!-- Main artwork image (background) -->
+    <div class="image-container">
+        <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=2000&h=2000&fit=crop" 
+             alt="Main Artwork" 
+             class="artwork-image"
+             id="artworkImage">
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- SECTION 1: Basic introduction with text overlay -->
+    <!-- data-zoom: how much to zoom (1 = no zoom, 2 = 2x zoom, 1.5 = 1.5x zoom)
+         data-x: horizontal focus point (0 = far left, 50 = center, 100 = far right)
+         data-y: vertical focus point (0 = top, 50 = center, 100 = bottom) -->
+    <section class="scroll-section detail-section" data-zoom="1" data-x="50" data-y="50">
+        <div class="text-overlay left">
+            <h2>Introduction</h2>
+            <p>This example shows you how to control zoom, add pop-up images, and create dynamic presentations.</p>
+        </div>
+    </section>
+
+    <!-- SECTION 2: Zoom to top-left corner with portrait pop-up -->
+    <section class="scroll-section detail-section" data-zoom="2.0" data-x="30" data-y="20">
+        <div class="text-overlay right">
+            <h2>Inspired by Monet</h2>
+            <p>The impressionistic brushwork in this upper section draws from Claude Monet's approach to capturing light and atmosphere.</p>
+        </div>
+        
+        <!-- Pop-up image from left - Portrait of Monet -->
+        <div class="popup-image from-left portrait">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop" alt="Portrait reference">
+            <div class="caption-bubble top-left" style="top: -60px; left: 10px;">
+                Claude Monet, inspiration!
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: Zoom to center-right with multiple pop-ups -->
+    <section class="scroll-section detail-section" data-zoom="2.3" data-x="65" data-y="50">
+        <div class="text-overlay left">
+            <h2>Dialogue with Masters</h2>
+            <p>Here I'm in conversation with both Kandinsky's abstract forms and Rothko's color fields—notice how these elements merge.</p>
+        </div>
+        
+        <!-- Pop-up from right - Kandinsky style -->
+        <div class="popup-image from-right medium" style="top: 20%;">
+            <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=500&h=500&fit=crop" alt="Abstract reference">
+            <div class="caption-bubble bottom-right" style="bottom: -60px; right: 10px;">
+                Kandinsky's geometry
+            </div>
+        </div>
+        
+        <!-- Pop-up from bottom - Rothko style -->
+        <div class="popup-image from-bottom landscape" style="bottom: 8%;">
+            <img src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=600&h=400&fit=crop" alt="Color field reference">
+        </div>
+    </section>
+
+    <!-- SECTION 4: Zoom to bottom area with detail -->
+    <section class="scroll-section detail-section" data-zoom="1.8" data-x="50" data-y="75">
+        <div class="text-overlay center">
+            <h2>Foundation & Texture</h2>
+            <p>The lower region builds up layers of history—each mark telling its own story of process and revision.</p>
+        </div>
+        
+        <!-- Pop-up from top - detail shot -->
+        <div class="popup-image from-top small">
+            <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=300&h=300&fit=crop" alt="Texture detail">
+            <div class="caption-bubble top-left" style="top: -50px; left: -20px;">
+                Close-up detail
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: Pull back to full view -->
+    <section class="scroll-section detail-section" data-zoom="1.1" data-x="50" data-y="50">
+        <div class="text-overlay center">
+            <h2>The Complete Vision</h2>
+            <p>All these influences and techniques come together in a unified whole—a synthesis of tradition and personal expression.</p>
+        </div>
+    </section>
+
+    <section class="final-section">
+        <h2>Advanced Presentation Example</h2>
+        <div class="artwork-info">
+            Mixed Media on Canvas<br>
+            48" × 36" (122cm × 91cm)<br>
+            Created 2024
+        </div>
+        <div class="cta-buttons">
+            <a href="index.html#contact" class="cta-button primary">INQUIRE ABOUT THIS WORK</a>
+            <a href="full-gallery.html" class="cta-button">BACK TO GALLERY</a>
+        </div>
+    </section>
+
+    <script>
+        const artworkImage = document.getElementById('artworkImage');
+        const detailSections = document.querySelectorAll('.detail-section');
+        const textOverlays = document.querySelectorAll('.text-overlay');
+        const popupImages = document.querySelectorAll('.popup-image');
+        const titleNav = document.querySelector('.artwork-title-nav');
+        const progressDots = document.querySelectorAll('.progress-dot');
+        
+        let currentSection = 0;
+
+        function updateImageTransform() {
+            const scrollProgress = window.scrollY;
+            const windowHeight = window.innerHeight;
+            
+            detailSections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                const sectionTop = rect.top;
+                const sectionBottom = rect.bottom;
+                
+                if (sectionTop <= windowHeight / 2 && sectionBottom >= windowHeight / 2) {
+                    const zoom = parseFloat(section.dataset.zoom) || 1;
+                    const xPos = parseFloat(section.dataset.x) || 50;
+                    const yPos = parseFloat(section.dataset.y) || 50;
+                    
+                    artworkImage.style.transform = `scale(${zoom}) translate(${(50 - xPos) * (zoom - 1) * 0.5}%, ${(50 - yPos) * (zoom - 1) * 0.5}%)`;
+                    artworkImage.style.transformOrigin = `${xPos}% ${yPos}%`;
+                    
+                    if (currentSection !== index + 1) {
+                        currentSection = index + 1;
+                        updateProgress();
+                    }
+                }
+            });
+
+            // Show/hide text overlays
+            textOverlays.forEach(overlay => {
+                const rect = overlay.getBoundingClientRect();
+                const isVisible = rect.top < windowHeight * 0.75 && rect.bottom > windowHeight * 0.25;
+                
+                if (isVisible) {
+                    overlay.classList.add('visible');
+                } else {
+                    overlay.classList.remove('visible');
+                }
+            });
+
+            // Show/hide popup images
+            popupImages.forEach(popup => {
+                const section = popup.closest('.scroll-section');
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    const isVisible = rect.top < windowHeight * 0.7 && rect.bottom > windowHeight * 0.3;
+                    
+                    if (isVisible) {
+                        popup.classList.add('visible');
+                    } else {
+                        popup.classList.remove('visible');
+                    }
+                }
+            });
+
+            if (scrollProgress > windowHeight * 0.5) {
+                titleNav.classList.add('visible');
+            } else {
+                titleNav.classList.remove('visible');
+            }
+
+            if (scrollProgress < windowHeight) {
+                currentSection = 0;
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            progressDots.forEach((dot, index) => {
+                if (index === currentSection) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        progressDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                const targetY = index === 0 ? 0 : window.innerHeight * (index + 0.5);
+                window.scrollTo({
+                    top: targetY,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateImageTransform();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        updateImageTransform();
+        window.addEventListener('resize', updateImageTransform);
+        artworkImage.addEventListener('dragstart', (e) => e.preventDefault());
+    </script>
+</body>
+</html>
