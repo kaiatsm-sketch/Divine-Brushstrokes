@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Portfolio - Showcase & Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --accent: #c49a6c;
+            --background: #faf8f5;
+            --text: #2d2d2d;
+            --text-light: #6b6b6b;
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #faf8f5 0%, #f0ebe3 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(196, 154, 108, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -100px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-50px) scale(1.1);
+            }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--primary);
+            color: var(--background);
+            text-decoration: none;
+            letter-spacing: 2px;
+            font-size: 0.95rem;
+            transition: all 0.4s ease;
+            border: 2px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        .cta-button:hover {
+            border-color: var(--accent);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 6rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .section-header .divider {
+            width: 80px;
+            height: 2px;
+            background: var(--accent);
+            margin: 1.5rem auto;
+        }
+
+        .section-header p {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .artwork-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .artwork-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .artwork-card img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+
+        .artwork-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .artwork-info {
+            padding: 1.5rem;
+            background: #fff;
+        }
+
+        .artwork-info h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .artwork-info p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Shop Section */
+        #shop {
+            background: #fff;
+            padding: 6rem 3rem;
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .shop-item {
+            background: var(--background);
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid var(--border);
+        }
+
+        .shop-item:hover {
+            border-color: var(--accent);
+        }
+
+        .shop-item img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .shop-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .shop-item-info {
+            padding: 1.5rem;
+        }
+
+        .shop-item-info h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .shop-item-info .price {
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .shop-item-info p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+        }
+
+        .buy-button:hover {
+            background: var(--accent);
+        }
+
+        /* Contact Section */
+        #contact {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: var(--background);
+        }
+
+        #contact .section-header h2,
+        #contact .section-header p {
+            color: var(--background);
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-info h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .contact-info p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .contact-details {
+            margin-top: 2rem;
+        }
+
+        .contact-details div {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .contact-details strong {
+            color: var(--accent);
+            display: inline-block;
+            width: 100px;
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            cursor: pointer;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.05rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background: #d4a97a;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #0f0f0f;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 2.5rem 2rem;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-container {
+                padding: 1.5rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.8rem;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .gallery-grid,
+            .shop-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-links {
+                gap: 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">YOUR NAME</div>
+            <ul class="nav-links">
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Fine Art Portfolio</h1>
+            <p>CONTEMPORARY WORKS & COMMISSIONS</p>
+            <a href="#gallery" class="cta-button">EXPLORE WORK</a>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="section-header">
+            <h2>Gallery</h2>
+            <div class="divider"></div>
+            <p>A curated selection of recent works exploring themes of light, texture, and human emotion</p>
+        </div>
+
+        <div class="gallery-grid">
+            <a href="artwork-detail.html" class="artwork-card">
+                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&h=800&fit=crop" alt="Abstract artwork 1">
+                <div class="artwork-info">
+                    <h3>Ethereal Moments</h3>
+                    <p>Mixed media on canvas, 2024</p>
+                </div>
+            </a>
+
+            <div class="artwork-card">
+                <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&h=800&fit=crop" alt="Abstract artwork 2">
+                <div class="artwork-info">
+                    <h3>Urban Symphony</h3>
+                    <p>Acrylic on canvas, 2024</p>
+                </div>
+            </div>
+
+            <div class="artwork-card">
+                <img src="https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&h=800&fit=crop" alt="Abstract artwork 3">
+                <div class="artwork-info">
+                    <h3>Coastal Reverie</h3>
+                    <p>Oil on linen, 2024</p>
+                </div>
+            </div>
+
+            <div class="artwork-card">
+                <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&h=800&fit=crop" alt="Abstract artwork 4">
+                <div class="artwork-info">
+                    <h3>Midnight Garden</h3>
+                    <p>Mixed media, 2024</p>
+                </div>
+            </div>
+
+            <div class="artwork-card">
+                <img src="https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&h=800&fit=crop" alt="Abstract artwork 5">
+                <div class="artwork-info">
+                    <h3>Silent Conversations</h3>
+                    <p>Acrylic and ink, 2024</p>
+                </div>
+            </div>
+
+            <div class="artwork-card">
+                <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=800&fit=crop" alt="Abstract artwork 6">
+                <div class="artwork-info">
+                    <h3>Temporal Flux</h3>
+                    <p>Oil on canvas, 2023</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section id="shop">
+        <div class="section-header">
+            <h2>Available Works</h2>
+            <div class="divider"></div>
+            <p>Original pieces and limited edition prints available for purchase</p>
+        </div>
+
+        <div class="shop-grid">
+            <div class="shop-item">
+                <img src="https://images.unsplash.com/photo-1579541814924-49fef17c5be5?w=800&h=800&fit=crop" alt="Artwork for sale 1">
+                <div class="shop-item-info">
+                    <h3>Dawn Breaking</h3>
+                    <p class="price">$1,200</p>
+                    <p>Original acrylic on canvas, 24" × 36"</p>
+                    <button class="buy-button">INQUIRE</button>
+                </div>
+            </div>
+
+            <div class="shop-item">
+                <img src="https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=800&h=800&fit=crop" alt="Artwork for sale 2">
+                <div class="shop-item-info">
+                    <h3>Luminous Path</h3>
+                    <p class="price">$850</p>
+                    <p>Mixed media on panel, 20" × 30"</p>
+                    <button class="buy-button">INQUIRE</button>
+                </div>
+            </div>
+
+            <div class="shop-item">
+                <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=800&h=800&fit=crop" alt="Artwork for sale 3">
+                <div class="shop-item-info">
+                    <h3>Reflections Series</h3>
+                    <p class="price">$450</p>
+                    <p>Limited edition print (50), 18" × 24"</p>
+                    <button class="buy-button">INQUIRE</button>
+                </div>
+            </div>
+
+            <div class="shop-item">
+                <img src="https://images.unsplash.com/photo-1580870069867-74c57ee78f3a?w=800&h=800&fit=crop" alt="Artwork for sale 4">
+                <div class="shop-item-info">
+                    <h3>Celestial Dance</h3>
+                    <p class="price">$2,100</p>
+                    <p>Original oil on canvas, 36" × 48"</p>
+                    <button class="buy-button">INQUIRE</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-header">
+            <h2>Get In Touch</h2>
+            <div class="divider"></div>
+            <p>Available for commissions, exhibitions, and speaking engagements</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Let's Collaborate</h3>
+                <p>I'm always interested in new projects, commissioned works, gallery exhibitions, and opportunities to speak about my artistic process and vision.</p>
+                <p>Whether you're a collector, curator, or simply appreciate the work, I'd love to hear from you.</p>
+                
+                <div class="contact-details">
+                    <div><strong>Email:</strong> artist@example.com</div>
+                    <div><strong>Phone:</strong> +1 (555) 123-4567</div>
+                    <div><strong>Studio:</strong> New York, NY</div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-button">SEND MESSAGE</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Your Name. All rights reserved. | Fine Art Portfolio</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form submission handler
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Here you would typically send this to a backend service
+            // For now, we'll just show an alert
+            alert('Thank you for your message! I will get back to you soon.');
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Buy button handlers
+        document.querySelectorAll('.buy-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const artworkName = this.closest('.shop-item-info').querySelector('h3').textContent;
+                alert(`Thank you for your interest in "${artworkName}"! I will contact you shortly to discuss the purchase.`);
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe gallery and shop items
+        document.querySelectorAll('.artwork-card, .shop-item').forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>
